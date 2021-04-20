@@ -7,5 +7,7 @@ module.exports = function() {
     require('../models/login.server.model.js');
     require('../models/home.server.model.js')
     require('../models/storage.server.model.js')
+    require('../models/warehouse.server.model.js')
+    require('../models/category.server.model.js')
     return db;
 }

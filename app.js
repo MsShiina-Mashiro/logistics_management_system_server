@@ -15,6 +15,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 var login = require('./routes/login');
 var home = require('./routes/home');
 var storage = require('./routes/storage');
+var category = require('./routes/category');
+var warehouse = require('./routes/warehouse');
 
 // 设置跨域和相应数据格式
 app.all('*', function(req, res, next) {
@@ -32,6 +34,8 @@ app.all('*', function(req, res, next) {
 app.use('/login',login)
 app.use('/home',home)
 app.use('/storage',storage)
+app.use('/category',category)
+app.use('/warehouse',warehouse)
 
 app.listen(8888, () => {
   console.log('listening at port 8888...');
