@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 var mongoose = require("mongoose");
-var Warehouse = mongoose.model("warehouse")
+var Warehouse = mongoose.model("warehouse");
 
 /* storage中调用 */
 router.get("/storage", function (req, res, next) {
@@ -28,6 +28,5 @@ router.get("/storage", function (req, res, next) {
     }
   });
 });
-
 
 module.exports = router;

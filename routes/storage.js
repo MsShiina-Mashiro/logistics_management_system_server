@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
   let pagenum = req.query.pagenum;
   let pagesize = req.query.pagesize;
   console.log(req.query.query);
-  if (req.query.query != '') {
+  if (req.query.query != "") {
     Storage.find(
       {
         $or: [
@@ -51,7 +51,7 @@ router.get("/", function (req, res, next) {
         }
       }
     );
-  }else{
+  } else {
     Storage.find({}, (err, docs) => {
       let addList = [];
       for (let i = 0; i < pagesize; i++) {
@@ -196,7 +196,7 @@ router.post("/out", function (req, res, next) {
               status: 400,
             },
           });
-        } else if (Number(docs[0].number) > number){
+        } else if (Number(docs[0].number) > number) {
           Storage.update(
             { item_id: params.item_id, ware_id: params.ware_id },
             {
@@ -211,7 +211,7 @@ router.post("/out", function (req, res, next) {
               });
             }
           );
-        }else{
+        } else {
           Storage.remove(
             { item_id: params.item_id, ware_id: params.ware_id },
             () => {
@@ -246,7 +246,7 @@ router.post("/out", function (req, res, next) {
             },
           });
         } else if (Number(docs[0].number) > number) {
-          console.log(Number(docs[0].number))
+          console.log(Number(docs[0].number));
           Storage.update(
             { item_id: docs[0].item_id, ware_id: docs[0].ware_id },
             {
@@ -266,7 +266,7 @@ router.post("/out", function (req, res, next) {
             { item_id: docs[0].item_id, ware_id: docs[0].ware_id },
             () => {
               number -= Number(docs[0].number);
-              if(number < Number(docs[1].number)){
+              if (number < Number(docs[1].number)) {
                 Storage.update(
                   { item_id: docs[1].item_id, ware_id: docs[1].ware_id },
                   { $set: { number: Number(docs[1].number) - number } },
@@ -279,7 +279,7 @@ router.post("/out", function (req, res, next) {
                     });
                   }
                 );
-              }else if(number == Number(docs[1].number)){
+              } else if (number == Number(docs[1].number)) {
                 Storage.remove(
                   { item_id: docs[1].item_id, ware_id: docs[1].ware_id },
                   () => {
