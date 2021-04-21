@@ -11,7 +11,7 @@ router.get("/", function (req, res, next) {
   // if(!req.body.password) return res.sendResult(null, 400, '密码不能为空！')
   let pagenum = req.query.pagenum;
   let pagesize = req.query.pagesize;
-  console.log(req.query.query);
+  // console.log(req.query.query);
   if (req.query.query != "") {
     Storage.find(
       {
@@ -246,7 +246,7 @@ router.post("/out", function (req, res, next) {
             },
           });
         } else if (Number(docs[0].number) > number) {
-          console.log(Number(docs[0].number));
+          // console.log(Number(docs[0].number));
           Storage.update(
             { item_id: docs[0].item_id, ware_id: docs[0].ware_id },
             {

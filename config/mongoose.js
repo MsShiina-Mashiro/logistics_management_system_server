@@ -9,5 +9,7 @@ module.exports = function() {
     require('../models/storage.server.model.js')
     require('../models/warehouse.server.model.js')
     require('../models/category.server.model.js')
+    require('../models/waybill.server.model.js')
+    require('../models/transportation.server.model.js')
     return db;
 }
