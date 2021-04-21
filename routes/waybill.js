@@ -135,7 +135,7 @@ router.post("/add", function (req, res, next) {
       delivery: params.delivery,
       phone: params.phone,
       active_step: active_step,
-      steps: steps
+      steps: steps,
     },
     (err, docs) => {
       if (err) {
@@ -181,14 +181,17 @@ router.delete("/:id", function (req, res, next) {
 router.put("/:id", function (req, res, next) {
   Waybill.updateOne(
     { id: req.params.id },
-    { $set: { item_id: req.body.item_id,
-              item_name: req.body.item_name,
-              from: req.body.from,
-              to: req.body.to,
-              delivery_id: req.body.delivery_id,
-              delivery: req.body.delivery,
-              phone: req.body.phone
-            } },
+    {
+      $set: {
+        item_id: req.body.item_id,
+        item_name: req.body.item_name,
+        from: req.body.from,
+        to: req.body.to,
+        delivery_id: req.body.delivery_id,
+        delivery: req.body.delivery,
+        phone: req.body.phone,
+      },
+    },
     (err, docs) => {
       if (err) {
         res.json({

@@ -8,7 +8,7 @@ var Category = mongoose.model("category");
 router.get("/storage", function (req, res, next) {
   //if(!req.body.username) return res.sendResult(null, 400, '用户名不能为空！')
   // if(!req.body.password) return res.sendResult(null, 400, '密码不能为空！')
-  Category.find({state:true}, (err, docs) => {
+  Category.find({ state: true }, (err, docs) => {
     if (err) {
       res.json({
         success: "fail",
@@ -32,7 +32,7 @@ router.get("/storage", function (req, res, next) {
 router.get("/waybill", function (req, res, next) {
   //if(!req.body.username) return res.sendResult(null, 400, '用户名不能为空！')
   // if(!req.body.password) return res.sendResult(null, 400, '密码不能为空！')
-  Category.find({state:true}, (err, docs) => {
+  Category.find({ state: true }, (err, docs) => {
     if (err) {
       res.json({
         success: "fail",
@@ -126,31 +126,31 @@ router.get("/", function (req, res, next) {
 });
 
 /* 处理物品状态 */
-router.put("/:id/state/:state", function(req,res,next){
-  let id = req.params.id
-  let state = req.params.state
+router.put("/:id/state/:state", function (req, res, next) {
+  let id = req.params.id;
+  let state = req.params.state;
   //console.log(id)
   //console.log(state=="true");
-  let mg_state = false
-  if(state && state=="true") mg_state = true
-  Category.update({id:id}, {$set:{state:mg_state}},(err)=>{
-    if(err){
+  let mg_state = false;
+  if (state && state == "true") mg_state = true;
+  Category.update({ id: id }, { $set: { state: mg_state } }, (err) => {
+    if (err) {
       res.json({
         success: "fail",
-            meta: {
-              status: 400,
-            }
-      })
-    }else{
+        meta: {
+          status: 400,
+        },
+      });
+    } else {
       res.json({
         success: "true",
-            meta: {
-              status: 200,
-            }
-      })
+        meta: {
+          status: 200,
+        },
+      });
     }
-  })
-})
+  });
+});
 
 /* 删除条目 */
 router.delete("/:id", function (req, res, next) {
@@ -177,7 +177,7 @@ router.delete("/:id", function (req, res, next) {
 router.put("/:id", function (req, res, next) {
   Category.updateOne(
     { id: req.params.id },
-    { $set: { item_name: req.body.item_name,unit: req.body.unit } },
+    { $set: { item_name: req.body.item_name, unit: req.body.unit } },
     (err, docs) => {
       if (err) {
         res.json({
@@ -208,17 +208,17 @@ router.post("/add", function (req, res, next) {
       item_id: params.item_id,
       item_name: params.item_name,
       unit: params.unit,
-      state: params.state
+      state: params.state,
     },
     (err, docs) => {
-      if(err) {
+      if (err) {
         res.json({
           success: "fail",
           meta: {
             status: 400,
           },
         });
-      }else{
+      } else {
         res.json({
           success: "true",
           meta: {
@@ -226,6 +226,7 @@ router.post("/add", function (req, res, next) {
           },
         });
       }
-    });
+    }
+  );
 });
 module.exports = router;
