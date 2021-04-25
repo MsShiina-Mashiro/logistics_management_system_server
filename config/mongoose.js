@@ -11,5 +11,6 @@ module.exports = function() {
     require('../models/category.server.model.js')
     require('../models/waybill.server.model.js')
     require('../models/transportation.server.model.js')
+    require('../models/charts.server.model.js')
     return db;
 }
