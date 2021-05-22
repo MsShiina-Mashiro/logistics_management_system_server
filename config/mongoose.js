@@ -12,5 +12,6 @@ module.exports = function() {
     require('../models/waybill.server.model.js')
     require('../models/transportation.server.model.js')
     require('../models/charts.server.model.js')
+    require('../models/history.server.model.js')
     return db;
 }

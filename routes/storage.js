@@ -4,6 +4,7 @@ var router = express.Router();
 var mongoose = require("mongoose");
 const { param } = require("./login");
 var Storage = mongoose.model("storage");
+var History = mongoose.model("history");
 
 /* 获取仓库信息. */
 router.get("/", function (req, res, next) {
@@ -129,6 +130,30 @@ router.put("/:id", function (req, res, next) {
 });
 /* 入库 */
 router.post("/in", function (req, res, next) {
+  var date = new Date();
+  var seperator1 = "-";
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var strDate = date.getDate();
+  var strHour = date.getHours();
+  var strMin = date.getMinutes();
+  var strSec = date.getSeconds();
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  if (strHour >= 0 && strHour <= 9) {
+    strHour = "0" + strHour;
+  }
+  if (strMin >= 0 && strMin <= 9) {
+    strMin = "0" + strMin;
+  }
+  if (strSec >= 0 && strSec <= 9) {
+    strSec = "0" + strSec;
+  }
+  var currentdate = year + seperator1 + month + seperator1 + strDate + ' ' + strHour + ':' + strMin + ':' + strSec;
   let params = req.body;
   Storage.find(
     { item_id: params.item_id, ware_id: params.ware_id },
@@ -154,12 +179,26 @@ router.post("/in", function (req, res, next) {
           },
           (err,
           (docs) => {
-            res.json({
-              success: "true",
-              meta: {
-                status: 201,
+            History.insertMany(
+              {
+                id:params.id,
+                type: '入库',
+                item_id: params.item_id,
+                item_name: params.item_name,
+                number: params.number,
+                unit: params.unit,
+                in_ware_id: params.ware_id,
+                date: currentdate
               },
-            });
+              (err, docs)=>{
+                res.json({
+                  success: "true",
+                  meta: {
+                    status: 201,
+                  },
+                });
+              }
+            )
           })
         );
       } else {
@@ -167,12 +206,26 @@ router.post("/in", function (req, res, next) {
           { item_id: params.item_id, ware_id: params.ware_id },
           { $set: { number: Number(docs[0].number) + Number(params.number) } },
           (err, docs) => {
-            res.json({
-              success: "true",
-              meta: {
-                status: 201,
+            History.insertMany(
+              {
+                id:params.id,
+                type: '入库',
+                item_id: params.item_id,
+                item_name: params.item_name,
+                number: params.number,
+                unit: params.unit,
+                in_ware_id: params.ware_id,
+                date: currentdate
               },
-            });
+              (err, docs)=>{
+                res.json({
+                  success: "true",
+                  meta: {
+                    status: 201,
+                  },
+                });
+              }
+            )
           }
         );
       }
@@ -181,6 +234,30 @@ router.post("/in", function (req, res, next) {
 });
 /* 出库 */
 router.post("/out", function (req, res, next) {
+  var date = new Date();
+  var seperator1 = "-";
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var strDate = date.getDate();
+  var strHour = date.getHours();
+  var strMin = date.getMinutes();
+  var strSec = date.getSeconds();
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  if (strHour >= 0 && strHour <= 9) {
+    strHour = "0" + strHour;
+  }
+  if (strMin >= 0 && strMin <= 9) {
+    strMin = "0" + strMin;
+  }
+  if (strSec >= 0 && strSec <= 9) {
+    strSec = "0" + strSec;
+  }
+  var currentdate = year + seperator1 + month + seperator1 + strDate + ' ' + strHour + ':' + strMin + ':' + strSec;
   let params = req.body;
   let length = req.body.ware_id.length;
   let number = Number(params.number);
@@ -203,24 +280,52 @@ router.post("/out", function (req, res, next) {
               $set: { number: Number(docs[0].number) - Number(params.number) },
             },
             (err, docs) => {
-              res.json({
-                success: "true",
-                meta: {
-                  status: 200,
+              History.insertMany(
+                {
+                  id:params.id,
+                  type: '出库',
+                  item_id: params.item_id,
+                  item_name: params.item_name,
+                  number: params.number,
+                  unit: params.unit,
+                  out_ware_id: params.ware_id[0],
+                  date: currentdate
                 },
-              });
+                (err, docs)=>{
+                  res.json({
+                    success: "true",
+                    meta: {
+                      status: 200,
+                    },
+                  });
+                }
+              )
             }
           );
         } else {
           Storage.remove(
             { item_id: params.item_id, ware_id: params.ware_id },
             () => {
-              res.json({
-                success: "true",
-                meta: {
-                  status: 200,
+              History.insertMany(
+                {
+                  id:params.id,
+                  type: '出库',
+                  item_id: params.item_id,
+                  item_name: params.item_name,
+                  number: params.number,
+                  unit: params.unit,
+                  out_ware_id: params.ware_id[0],
+                  date: currentdate
                 },
-              });
+                (err, docs)=>{
+                  res.json({
+                    success: "true",
+                    meta: {
+                      status: 200,
+                    },
+                  });
+                }
+              )
             }
           );
         }
@@ -253,12 +358,26 @@ router.post("/out", function (req, res, next) {
               $set: { number: Number(docs[0].number) - Number(params.number) },
             },
             (err, docs) => {
-              res.json({
-                success: "true",
-                meta: {
-                  status: 200,
+              History.insertMany(
+                {
+                  id:params.id,
+                  type: '出库',
+                  item_id: params.item_id,
+                  item_name: params.item_name,
+                  number: params.number,
+                  unit: params.unit,
+                  out_ware_id: `${params.ware_id[0]}, ${params.ware_id[1]}`,
+                  date: currentdate
                 },
-              });
+                (err, docs)=>{
+                  res.json({
+                    success: "true",
+                    meta: {
+                      status: 200,
+                    },
+                  });
+                }
+              )
             }
           );
         } else {
@@ -271,24 +390,52 @@ router.post("/out", function (req, res, next) {
                   { item_id: docs[1].item_id, ware_id: docs[1].ware_id },
                   { $set: { number: Number(docs[1].number) - number } },
                   (err, docs) => {
-                    res.json({
-                      success: "true",
-                      meta: {
-                        status: 200,
+                    History.insertMany(
+                      {
+                        id:params.id,
+                        type: '出库',
+                        item_id: params.item_id,
+                        item_name: params.item_name,
+                        number: params.number,
+                        unit: params.unit,
+                        out_ware_id: `${params.ware_id[0]}, ${params.ware_id[1]}`,
+                        date: currentdate
                       },
-                    });
+                      (err, docs)=>{
+                        res.json({
+                          success: "true",
+                          meta: {
+                            status: 200,
+                          },
+                        });
+                      }
+                    )
                   }
                 );
               } else if (number == Number(docs[1].number)) {
                 Storage.remove(
                   { item_id: docs[1].item_id, ware_id: docs[1].ware_id },
                   () => {
-                    res.json({
-                      success: "true",
-                      meta: {
-                        status: 200,
+                    History.insertMany(
+                      {
+                        id:params.id,
+                        type: '出库',
+                        item_id: params.item_id,
+                        item_name: params.item_name,
+                        number: params.number,
+                        unit: params.unit,
+                        out_ware_id: `${params.ware_id[0]}, ${params.ware_id[1]}`,
+                        date: currentdate
                       },
-                    });
+                      (err, docs)=>{
+                        res.json({
+                          success: "true",
+                          meta: {
+                            status: 200,
+                          },
+                        });
+                      }
+                    )
                   }
                 );
               }
@@ -301,6 +448,30 @@ router.post("/out", function (req, res, next) {
 });
 /* 越库 */
 router.post("/trans", function (req, res, next) {
+  var date = new Date();
+  var seperator1 = "-";
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var strDate = date.getDate();
+  var strHour = date.getHours();
+  var strMin = date.getMinutes();
+  var strSec = date.getSeconds();
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  if (strHour >= 0 && strHour <= 9) {
+    strHour = "0" + strHour;
+  }
+  if (strMin >= 0 && strMin <= 9) {
+    strMin = "0" + strMin;
+  }
+  if (strSec >= 0 && strSec <= 9) {
+    strSec = "0" + strSec;
+  }
+  var currentdate = year + seperator1 + month + seperator1 + strDate + ' ' + strHour + ':' + strMin + ':' + strSec;
   let params = req.body;
   let number = Number(params.number);
   Storage.find(
@@ -334,12 +505,27 @@ router.post("/trans", function (req, res, next) {
                     },
                     (err,
                     (docs) => {
-                      res.json({
-                        success: "true",
-                        meta: {
-                          status: 200,
+                      History.insertMany(
+                        {
+                          id:params.id,
+                          type: '越库',
+                          item_id: params.item_id,
+                          item_name: params.item_name,
+                          number: params.number,
+                          unit: params.unit,
+                          in_ware_id: params.to_ware_id,
+                          out_ware_id: params.from_ware_id,
+                          date: currentdate
                         },
-                      });
+                        (err, docs)=>{
+                          res.json({
+                            success: "true",
+                            meta: {
+                              status: 200,
+                            },
+                          });
+                        }
+                      )
                     })
                   );
                 } else {
@@ -347,12 +533,27 @@ router.post("/trans", function (req, res, next) {
                     { item_id: params.item_id, ware_id: params.to_ware_id },
                     { $set: { number: Number(docs2[0].number) + number } },
                     (err, docs) => {
-                      res.json({
-                        success: "true",
-                        meta: {
-                          status: 200,
+                      History.insertMany(
+                        {
+                          id:params.id,
+                          type: '越库',
+                          item_id: params.item_id,
+                          item_name: params.item_name,
+                          number: params.number,
+                          unit: params.unit,
+                          in_ware_id: params.to_ware_id,
+                          out_ware_id: params.from_ware_id,
+                          date: currentdate
                         },
-                      });
+                        (err, docs)=>{
+                          res.json({
+                            success: "true",
+                            meta: {
+                              status: 200,
+                            },
+                          });
+                        }
+                      )
                     }
                   );
                 }
@@ -381,12 +582,27 @@ router.post("/trans", function (req, res, next) {
                     },
                     (err,
                     (docs) => {
-                      res.json({
-                        success: "true",
-                        meta: {
-                          status: 200,
+                      History.insertMany(
+                        {
+                          id:params.id,
+                          type: '越库',
+                          item_id: params.item_id,
+                          item_name: params.item_name,
+                          number: params.number,
+                          unit: params.unit,
+                          in_ware_id: params.to_ware_id,
+                          out_ware_id: params.from_ware_id,
+                          date: currentdate
                         },
-                      });
+                        (err, docs)=>{
+                          res.json({
+                            success: "true",
+                            meta: {
+                              status: 200,
+                            },
+                          });
+                        }
+                      )
                     })
                   );
                 } else {
@@ -394,12 +610,27 @@ router.post("/trans", function (req, res, next) {
                     { item_id: params.item_id, ware_id: params.to_ware_id },
                     { $set: { number: Number(docs2[0].number) + number } },
                     (err, docs) => {
-                      res.json({
-                        success: "true",
-                        meta: {
-                          status: 200,
+                      History.insertMany(
+                        {
+                          id:params.id,
+                          type: '越库',
+                          item_id: params.item_id,
+                          item_name: params.item_name,
+                          number: params.number,
+                          unit: params.unit,
+                          in_ware_id: params.to_ware_id,
+                          out_ware_id: params.from_ware_id,
+                          date: currentdate
                         },
-                      });
+                        (err, docs)=>{
+                          res.json({
+                            success: "true",
+                            meta: {
+                              status: 200
+                            },
+                          });
+                        }
+                      )
                     }
                   );
                 }

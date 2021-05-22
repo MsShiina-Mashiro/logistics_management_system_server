@@ -20,6 +20,7 @@ var warehouse = require('./routes/warehouse');
 var waybill = require('./routes/waybill');
 var transportation = require('./routes/transportation');
 var charts = require('./routes/charts');
+var history = require('./routes/history');
 
 // 设置跨域和相应数据格式
 app.all('*', function(req, res, next) {
@@ -42,6 +43,7 @@ app.use('/warehouse',warehouse)
 app.use('/transportation',transportation)
 app.use('/waybill',waybill)
 app.use('/charts',charts)
+app.use('/history',history)
 
 app.listen(8888, () => {
   console.log('listening at port 8888...');
